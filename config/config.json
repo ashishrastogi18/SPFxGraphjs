@@ -1,0 +1,28 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "sp-fx-charts-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/spFxCharts/SpFxChartsWebPart.js",
+          "manifest": "./src/webparts/spFxCharts/SpFxChartsWebPart.manifest.json"
+        }
+      ]
+      
+    }
+
+    
+  },
+  "externals": {
+
+    "jsChart": {
+      "path": "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js",
+      "globalName": "jsChart"
+    }
+
+  },
+  "localizedResources": {
+    "SpFxChartsWebPartStrings": "lib/webparts/spFxCharts/loc/{locale}.js"
+  }
+}
