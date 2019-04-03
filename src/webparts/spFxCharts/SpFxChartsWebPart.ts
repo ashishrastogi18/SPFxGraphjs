@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
+
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField,
@@ -12,10 +13,15 @@ import {
   PropertyPaneToggle,    
   PropertyPaneDropdown   
 } from '@microsoft/sp-property-pane';
-
+import {
+  SPHttpClient,
+  SPHttpClientResponse   
+} from '@microsoft/sp-http';
 import * as strings from 'SpFxChartsWebPartStrings';
 import SpFxCharts from './components/SpFxCharts';
 import { ISpFxChartsProps } from './components/ISpFxChartsProps';
+
+import ChartModel from './Models/ChartModel';
 
 export interface ISpFxChartsWebPartProps {
   description: string;
@@ -25,11 +31,13 @@ export interface ISpFxChartsWebPartProps {
   checkbox:string;
   URL:string;
   textbox:string;
-  
-
+  siteurl : string;
+  listName: string;
+  spHttpClient: SPHttpClient;
 }
 
 export default class SpFxChartsWebPart extends BaseClientSideWebPart<ISpFxChartsWebPartProps> {
+  
 
   public render(): void {
     const element: React.ReactElement<ISpFxChartsProps > = React.createElement(
@@ -41,8 +49,14 @@ export default class SpFxChartsWebPart extends BaseClientSideWebPart<ISpFxCharts
         dropdown : this.properties.dropdowm,
         checkbox : this. properties.checkbox,
         URL : this.properties.URL,
-        textbox: this.properties.textbox
-      }
+        textbox: this.properties.textbox,
+        siteurl: this.context.pageContext.web.absoluteUrl,
+        listName: this.properties.listName,
+        spHttpClient: this.context.spHttpClient,
+       
+        
+      },
+      
     );
 
     ReactDom.render(element, this.domElement);

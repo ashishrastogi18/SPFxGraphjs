@@ -3,11 +3,17 @@ import styles from './SpFxCharts.module.scss';
 import {Bar} from 'react-chartjs-2';
 import {Pie} from 'react-chartjs-2';
 import { ISpFxChartsProps } from './ISpFxChartsProps';
+import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import { escape } from '@microsoft/sp-lodash-subset';
 //gulp cleanimport { css } from 'office-ui-fabric-react';
 import SPDataSource from '../Services/SPDataSource';
+import ISPDataSource from '../Services/SPDataSource';
 //const jsChart = require("jsChart");
-
+import { sp } from "@pnp/sp";
+import {
+  SPHttpClient,
+  SPHttpClientResponse   
+} from '@microsoft/sp-http';
 export interface IReactSpfxState{  
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   datasets: [
@@ -23,12 +29,14 @@ export interface IReactSpfxState{
   ];
 }  
 export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
-
-  
+ 
+  private _listServiceInstance: ISPDataSource;
+ 
   public constructor(props: ISpFxChartsProps, state: IReactSpfxState){  
     super(props); 
+   
     
-    var spDataSource = new SPDataSource();
+   var spDataSource = new SPDataSource();
    var chartJSData = spDataSource.getData();
     this.state ={
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -65,9 +73,16 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
   }*/
 
   public componentDidMount(){
-    var spDataSource = new SPDataSource();
+    
+   var spDataSource = new SPDataSource();
     var chartJSData = spDataSource.getData();
-    //this._getListData();
+   
+    //this.getContacts();
+    //this.getListData();
+
+    this.getToDosAsync().then((data) => {
+      console.log("List Items:", data);
+    });
     this.setState({
       
       datasets: [
@@ -84,7 +99,7 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
     });
   }
   
-
+  
   
   //render chart after the chart type is changed on the web part property panel
   /*public componentDidUpdate(): void {
@@ -119,10 +134,45 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
 }
 
 
+private async getToDosAsync():Promise<any> {
+  let items=[];
+  await this.props.spHttpClient.get(`${this.props.siteurl}/_api/web/lists/getbytitle('Incidents')/items`,
+  SPHttpClient.configurations.v1).then(async(response)=>{
+    if(response.ok)
+    {
+      await response.json().then((data)=>{
+        items = data.value;
+      });
+    }
+  });
+
+ // this.setState({items:items});
+  return items;
+}
+
+public getListData(): void {
+    
+  this.props.spHttpClient.get(`${this.props.siteurl}/_api/web/lists/GetByTitle('Incidents')/items`, SPHttpClient.configurations.v1,
+  {
+    headers: {
+      'Accept': 'application/json;odata=nometadata',
+      'odata-version': ''
+    }
+  })
+  .then((response: SPHttpClientResponse) => { 
+        debugger;
+        
+       response.json();
+      }, (error: any): void => {
+        
+      });
+  }
+
   public render(): React.ReactElement<ISpFxChartsProps> {
     return (
-
+  
       <div className={ styles.spFxCharts }>
+      <div>{this.props.siteurl}</div>
       
       <div className={ styles.container }>
               <p >dropdowm: {escape(this.props.dropdown)}</p>

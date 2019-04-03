@@ -1,27 +1,17 @@
 import {ISPDataSource} from './ISPDataSource';
 import ChartJSData from '../Models/ChartModel';
-import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import {
-  SPHttpClient,
-  SPHttpClientResponse   
-} from '@microsoft/sp-http';
+import { ServiceKey, ServiceScope } from '@microsoft/sp-core-library';
+import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { PageContext } from '@microsoft/sp-page-context';
+
 import {  
     Environment,  
     EnvironmentType  
   } from '@microsoft/sp-core-library';   
 import ChartModel from '../Models/ChartModel';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 export default class SPDataSource implements ISPDataSource {
-  private _spHttpClient: SPHttpClient;
-  private _pageContext: PageContext;  
-  private _currentWebUrl: string;  
-
- public constructor() {  
-  /* this._spHttpClient;
-  this._pageContext;   
-  this._currentWebUrl = this._pageContext.web.absoluteUrl;   */
-
-}
+ 
 
     
     public getData(): ChartJSData {
@@ -39,7 +29,8 @@ export default class SPDataSource implements ISPDataSource {
          
          
            //this._getListData();
-           
+           //this.getContacts();
+          
             return this.getMockData();
          }  
         
@@ -49,14 +40,14 @@ export default class SPDataSource implements ISPDataSource {
     public getData1(): void {
         if (Environment.type === EnvironmentType.Local) 
         {  
-            debugger;
+            
 
           
             } 
            
            else 
            {  
-            debugger;
+            
              this.getMockData();
          }  
         
@@ -78,15 +69,8 @@ export default class SPDataSource implements ISPDataSource {
           
           });  
     }
-
-    private _getListData(): Promise<JSON> {
-      
-      return this._spHttpClient.get(this._pageContext.web.absoluteUrl + `/_api/web/lists?$filter=Hidden eq false`, SPHttpClient.configurations.v1)
-        .then((response: SPHttpClientResponse) => {
-          return response.json();
-        });
-    }
-    
+  
   //end of class  
 }
+
 

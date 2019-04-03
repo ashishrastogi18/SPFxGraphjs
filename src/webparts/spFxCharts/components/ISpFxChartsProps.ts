@@ -1,3 +1,5 @@
+
+import { SPHttpClient } from '@microsoft/sp-http';
 export interface ISpFxChartsProps {
   description: string;
   Slider : string;
@@ -6,4 +8,7 @@ export interface ISpFxChartsProps {
         checkbox : string;
         URL : string;
         textbox: string;
+        siteurl : string;
+        listName: string;
+  spHttpClient: SPHttpClient;
 }
