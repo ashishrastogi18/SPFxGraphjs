@@ -1,4 +1,5 @@
 import ChartJSData from '../Models/ChartModel';
+import { SPHttpClient } from '@microsoft/sp-http';
 
 /*
  * IDataSource interface - need to be implemented by all the DataSource classes
@@ -6,6 +7,6 @@ import ChartJSData from '../Models/ChartModel';
  * ExcelDataSource
  */
 export interface ISPDataSource {
-    getData():ChartJSData;
+    getData(spHttpClient: SPHttpClient, siteurl : string):ChartJSData;
     
 }

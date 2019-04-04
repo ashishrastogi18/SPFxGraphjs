@@ -30,15 +30,11 @@ export interface IReactSpfxState{
 }  
 export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
  
-  private _listServiceInstance: ISPDataSource;
+  
  
   public constructor(props: ISpFxChartsProps, state: IReactSpfxState){  
     super(props); 
-   
-    
-   var spDataSource = new SPDataSource();
-   var chartJSData = spDataSource.getData();
-    this.state ={
+      this.state ={
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
       datasets: [
         {
@@ -75,14 +71,11 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
   public componentDidMount(){
     
    var spDataSource = new SPDataSource();
-    var chartJSData = spDataSource.getData();
+    var chartJSData = spDataSource.getData(this.props.spHttpClient, this.props.siteurl);
    
-    //this.getContacts();
-    //this.getListData();
+    
 
-    this.getToDosAsync().then((data) => {
-      console.log("List Items:", data);
-    });
+   
     this.setState({
       
       datasets: [
@@ -110,7 +103,7 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
   switch(param) {
     case 'Pie':
       return  < Pie 
-      //data={this.data1}
+      
       data = {this.state}
       width={100}
 
@@ -121,7 +114,7 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
     />;
     default:
     return  < Bar 
-    //data={this.data1}
+   
     data = {this.state}
     width={100}
 
@@ -134,39 +127,6 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
 }
 
 
-private async getToDosAsync():Promise<any> {
-  let items=[];
-  await this.props.spHttpClient.get(`${this.props.siteurl}/_api/web/lists/getbytitle('Incidents')/items`,
-  SPHttpClient.configurations.v1).then(async(response)=>{
-    if(response.ok)
-    {
-      await response.json().then((data)=>{
-        items = data.value;
-      });
-    }
-  });
-
- // this.setState({items:items});
-  return items;
-}
-
-public getListData(): void {
-    
-  this.props.spHttpClient.get(`${this.props.siteurl}/_api/web/lists/GetByTitle('Incidents')/items`, SPHttpClient.configurations.v1,
-  {
-    headers: {
-      'Accept': 'application/json;odata=nometadata',
-      'odata-version': ''
-    }
-  })
-  .then((response: SPHttpClientResponse) => { 
-        debugger;
-        
-       response.json();
-      }, (error: any): void => {
-        
-      });
-  }
 
   public render(): React.ReactElement<ISpFxChartsProps> {
     return (
