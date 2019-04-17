@@ -34,7 +34,8 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
  
   public constructor(props: ISpFxChartsProps, state: IReactSpfxState){  
     super(props); 
-      this.state ={
+   
+       this.state ={
       labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
       datasets: [
         {
@@ -47,7 +48,7 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
           data: [40, 677, 34,57, 49]
         }
       ]
-    };
+    }; 
   }  
 
   /*private renderChart():void {
