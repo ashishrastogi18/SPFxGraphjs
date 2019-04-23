@@ -68,19 +68,9 @@ private spHttpClient:SPHttpClient;
             datasets: [
               {
                 label:  chartJSData.dataSetLabel,
-                backgroundColor: [  
-                  'rgba(255, 99, 132, 0.2)',  
-                  'rgba(54, 162, 235, 0.2)',  
-                  'rgba(255, 206, 86, 0.2)',  
-                  'rgba(75, 192, 192, 0.2)',                  
-              ],  
+                backgroundColor: [ "#FF6384", "#4BC0C0", "#FFCE56", "#82E0AA"],  
               //setting border color of bars  
-              borderColor: [  
-                  'rgba(255,99,132,1)',  
-                  'rgba(54, 162, 235, 1)',  
-                  'rgba(255, 206, 86, 1)',  
-                  'rgba(75, 192, 192, 1)',                 
-              ],  
+              borderColor: [ "#FF6384", "#4BC0C0", "#FFCE56", "#82E0AA"] ,  
               //setting border width  
               borderWidth: 1 ,
                
@@ -120,8 +110,18 @@ private spHttpClient:SPHttpClient;
 
       height={50}
       options={{
-        maintainAspectRatio: true
+        maintainAspectRatio: true,
+        scales: {  
+          yAxes: [{  
+          stacked: true,  
+              ticks: {  
+                  beginAtZero:true  
+              }  
+          }]  
+      }
       }}
+
+      
     />;
     default:
     return  < Bar 
@@ -131,7 +131,15 @@ private spHttpClient:SPHttpClient;
 
     height={50}
     options={{
-      maintainAspectRatio: true
+      maintainAspectRatio: true,
+      scales: {  
+        yAxes: [{  
+        stacked: true,  
+            ticks: {  
+                beginAtZero:true  
+            }  
+        }]  
+    }
     }}
   />;
   }
