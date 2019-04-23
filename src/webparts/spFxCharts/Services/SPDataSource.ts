@@ -50,9 +50,9 @@ export default class SPDataSource implements ISPDataSource {
     }
    
     public  getToDosAsync(spHttpClient,siteurl):ChartJSData {
-      let region = ['India','China','United States','United Kingdom'];
+     
       let items=[];
-      const chartJSData = new ChartJSData();
+      let chartJSData = new ChartJSData();
        spHttpClient.get(`${siteurl}/_api/web/lists/getbytitle('Incidents')/items`,
       SPHttpClient.configurations.v1).then((response)=>{
         if(response.ok)
@@ -68,13 +68,13 @@ export default class SPDataSource implements ISPDataSource {
             chartJSData.dataLabels = ["Group 1", "Group 2", "Group3", "Group 4"];
             chartJSData.dataValues = [indlength, chinalength,uslength,uklength];
             chartJSData.dataColors = [ "#FF6384", "#4BC0C0", "#FFCE56", "#82E0AA"];
-            
+            return chartJSData;
           });
-          return chartJSData;
+          
         }
-        return chartJSData;
+        
       });
-     
+     if(chartJSData.dataValues != undefined)
       return chartJSData;
     }
  

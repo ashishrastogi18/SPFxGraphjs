@@ -10,10 +10,12 @@ import SPDataSource from '../Services/SPDataSource';
 import ISPDataSource from '../Services/SPDataSource';
 //const jsChart = require("jsChart");
 import { sp } from "@pnp/sp";
+import ChartJSData from '../Models/ChartModel';
 import {
   SPHttpClient,
   SPHttpClientResponse   
 } from '@microsoft/sp-http';
+import { PropertyPaneSlider } from '@microsoft/sp-property-pane';
 export interface IReactSpfxState{  
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   datasets: [
@@ -31,66 +33,73 @@ export interface IReactSpfxState{
 export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
  
   
- 
+  
+
+private spHttpClient:SPHttpClient;
   public constructor(props: ISpFxChartsProps, state: IReactSpfxState){  
     super(props); 
-   
-       this.state ={
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          label: 'My First dataset',
-          backgroundColor: 'rgba(255,99,132,0.2)',
-          borderColor: 'rgba(255,99,132,1)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-          hoverBorderColor: 'rgba(255,99,132,1)',
-          data: [40, 677, 34,57, 49]
-        }
-      ]
-    }; 
+     
+     
   }  
 
-  /*private renderChart():void {
-
-    //read data from the data source
+  public  retrieveData() : void {
     
-    var spDataSource = new SPDataSource();
-    var chartJSData = spDataSource.getData();
-    this.setState({
+    var siteurl = this.props.siteurl;
+    var spHttpClient = this.props.spHttpClient;
+    let items=[];
+    let chartJSData = new ChartJSData();
+     spHttpClient.get(`${siteurl}/_api/web/lists/getbytitle('Incidents')/items`,
+    SPHttpClient.configurations.v1).then((response)=>{
+      if(response.ok)
+      {
+         response.json().then((data)=>{
+          items = data.value;
+          let indlength = items.filter(d=>d.Country == "India").length;
+          let chinalength = items.filter(d=>d.Country == "China").length;
+          let uslength = items.filter(d=>d.Country == "United States").length;
+          let uklength = items.filter(d=>d.Country == "United Kingdom").length;
+         
+          chartJSData.dataSetLabel = "Real data set";
+          chartJSData.dataLabels = ["Group 1", "Group 2", "Group3", "Group 4"];
+          chartJSData.dataValues = [indlength, chinalength,uslength,uklength];
+          chartJSData.dataColors = [ "#FF6384", "#4BC0C0", "#FFCE56", "#82E0AA"];
+          this.setState({
+            labels: chartJSData.dataLabels,
+            datasets: [
+              {
+                label:  chartJSData.dataSetLabel,
+                backgroundColor: [  
+                  'rgba(255, 99, 132, 0.2)',  
+                  'rgba(54, 162, 235, 0.2)',  
+                  'rgba(255, 206, 86, 0.2)',  
+                  'rgba(75, 192, 192, 0.2)',                  
+              ],  
+              //setting border color of bars  
+              borderColor: [  
+                  'rgba(255,99,132,1)',  
+                  'rgba(54, 162, 235, 1)',  
+                  'rgba(255, 206, 86, 1)',  
+                  'rgba(75, 192, 192, 1)',                 
+              ],  
+              //setting border width  
+              borderWidth: 1 ,
+               
+             
+                data: chartJSData.dataValues
+              }
+            ]
+          });
+        });
+        
+      }
       
-      datasets: [
-        {
-          
-          //data: chartJSData.dataValues
-        }
-      ]
     });
-    
-  }*/
+  
+  }
 
   public componentDidMount(){
     
-   var spDataSource = new SPDataSource();
-    var chartJSData = spDataSource.getData(this.props.spHttpClient, this.props.siteurl);
-   
-    
-
-   
-    this.setState({
-      
-      datasets: [
-        {
-          label: 'My Second dataset',
-          backgroundColor: 'rgba(255,99,132,0.2)',
-          borderColor: 'rgba(255,99,132,1)',
-          borderWidth: 1,
-          hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-          hoverBorderColor: 'rgba(255,99,132,1)',
-          data: chartJSData.dataValues
-        }
-      ]
-    });
+    this.retrieveData();
   }
   
   
@@ -101,6 +110,7 @@ export default class SpFxCharts extends React.Component<ISpFxChartsProps, {}> {
   }*/
 
     private renderSwitch(param) {
+   
   switch(param) {
     case 'Pie':
       return  < Pie 
